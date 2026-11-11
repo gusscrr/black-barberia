@@ -1,0 +1,69 @@
+/* =========================================================
+   Botón flotante de WhatsApp (WhatsApp.jsx)
+   Círculo verde con una onda suave que sale de él.
+   Oculto en la portada; aparece suave al bajar.
+   ========================================================= */
+
+.waBtn {
+  position: fixed;
+  right: clamp(18px, 2.5vw, 30px);
+  bottom: clamp(18px, 2.5vw, 30px);
+  z-index: 9;                      /* debajo de la barra y de las ventanas */
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #25d366;
+  color: var(--white);
+  box-shadow: 0 8px 22px -8px rgba(13, 13, 13, .35);
+  /* escondido hasta que bajás */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(14px) scale(.9);
+  transition:
+    opacity .35s ease,
+    transform .5s cubic-bezier(.16, 1, .3, 1),
+    background-color .25s ease,
+    visibility 0s linear .5s;
+}
+.waBtn.show {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition:
+    opacity .45s ease,
+    transform .6s cubic-bezier(.16, 1, .3, 1),
+    background-color .25s ease,
+    visibility 0s;
+}
+.waBtn:hover, .waBtn.show:hover { background: #20bd5a; color: var(--white); }
+.waBtn.show:active { transform: scale(.95); }
+.waBtn svg { position: relative; width: 20px; height: 20px; }
+
+/* Onda suave y transparente: sale lenta del círculo y se desvanece */
+.waBtn::before,
+.waBtn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(37, 211, 102, .22);
+  opacity: 0;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .waBtn.show::before { animation: waWave 4.4s cubic-bezier(.25, .1, .25, 1) infinite; }
+  .waBtn.show::after { animation: waWave 4.4s cubic-bezier(.25, .1, .25, 1) 2.2s infinite; }
+  @keyframes waWave {
+    0% { transform: scale(1); opacity: 0; }
+    15% { opacity: .6; }
+    100% { transform: scale(1.75); opacity: 0; }
+  }
+}
+
+/* ---------- Celular ---------- */
+@media (max-width: 640px) {
+  .waBtn { width: 40px; height: 40px; }
+  .waBtn svg { width: 19px; height: 19px; }
+}

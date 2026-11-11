@@ -1,0 +1,207 @@
+/* =========================================================
+   Sección "La barbería que recuerda tu estilo" (StyleMemory.jsx)
+   Única sección oscura de la página: grises y blanco
+   ========================================================= */
+
+.smSection {
+  --out: cubic-bezier(.16, 1, .3, 1);
+  position: relative;
+  overflow: clip;
+  padding: clamp(96px, 12vw, 168px) 0;
+  background:
+    radial-gradient(50% 60% at 72% 50%, rgba(255, 255, 255, .05), transparent 70%),
+    #151413;   /* casi negro, apenas cálido */
+  color: #f2f2f2;
+}
+.smGrid {
+  display: grid;
+  grid-template-columns: 1fr minmax(320px, 440px);
+  align-items: center;
+  gap: clamp(48px, 7vw, 120px);
+}
+
+/* ---------- Texto ---------- */
+.smTitle {
+  font-size: clamp(38px, 4.4vw, 64px);
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: -.035em;
+}
+.smLine { display: block; overflow: clip; padding-bottom: .08em; margin-bottom: -.08em; }
+.smLine > span { display: block; }
+.smMuted { color: #9a9a98; }
+.smLead {
+  max-width: 42ch;
+  margin-top: 26px;
+  font-size: 17px;
+  line-height: 1.6;
+  color: #bdbdbb;
+}
+.smFacts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 24px;
+}
+.smFacts li {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .06);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .06);
+  font-size: 13px;
+  color: #d6d6d4;
+}
+.smActions { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; margin-top: 34px; }
+.smBtn { background: #f2f2f2; color: #111; }
+.smBtn:hover { background: #ffffff; }
+.smLink { font-size: 15px; color: #bdbdbb; transition: color .2s; }
+.smLink:hover { color: #fff; }
+
+/* ---------- Escáner ---------- */
+.smVisual {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.smScanner {
+  position: relative;
+  width: min(100%, 310px);
+  aspect-ratio: 6 / 7;          /* un poco más alto que ancho, como la referencia */
+  overflow: hidden;
+  border-radius: 28px;
+  background: #22211f;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .05),
+    0 40px 80px -30px rgba(0, 0, 0, .6);
+}
+/* Esquinas del visor */
+.smCorner {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  border: 0 solid #cfcfcd;
+}
+.smCorner.tl { top: 22px; left: 22px; border-top-width: 2px; border-left-width: 2px; border-top-left-radius: 8px; }
+.smCorner.tr { top: 22px; right: 22px; border-top-width: 2px; border-right-width: 2px; border-top-right-radius: 8px; }
+.smCorner.bl { bottom: 22px; left: 22px; border-bottom-width: 2px; border-left-width: 2px; border-bottom-left-radius: 8px; }
+.smCorner.br { bottom: 22px; right: 22px; border-bottom-width: 2px; border-right-width: 2px; border-bottom-right-radius: 8px; }
+/* Grilla redonda del centro */
+.smDots {
+  position: absolute;
+  inset: 18%;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, .08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, .08) 1px, transparent 1px);
+  background-size: 16px 16px;
+  -webkit-mask-image: radial-gradient(closest-side at 50% 50%, #000 70%, transparent 100%);
+  mask-image: radial-gradient(closest-side at 50% 50%, #000 70%, transparent 100%);
+}
+/* Línea que escanea, con una estela suave arriba (va siempre hacia abajo) */
+.smBeam {
+  position: absolute;
+  right: 0;
+  left: 0;
+  top: 46%;
+  height: 2px;
+  background: #d9d9d7;
+  box-shadow: 0 0 12px rgba(255, 255, 255, .35);
+}
+.smBeam::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  right: 0;
+  left: 0;
+  height: 44px;
+  background: linear-gradient(transparent, rgba(255, 255, 255, .12));
+}
+
+/* Ficha que flota sobre el escáner */
+.smCard {
+  position: absolute;
+  right: -8%;
+  bottom: 64px;
+  width: 232px;
+  padding: 14px 16px 10px;
+  border-radius: 16px;
+  background: rgba(38, 37, 35, .8);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08), 0 24px 48px -20px rgba(0, 0, 0, .6);
+}
+.smCardHead { margin-bottom: 6px; font-size: 11.5px; letter-spacing: .02em; color: #9a9a98; }
+.smRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 7px 0;
+  font-size: 13px;
+  line-height: 1.3;
+}
+.smRow + .smRow { border-top: 1px solid rgba(255, 255, 255, .07); }
+.smRow span { color: #9a9a98; }
+.smRow strong { overflow: hidden; font-weight: 500; color: #f2f2f2; text-align: right; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Estado abajo */
+.smStatus {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 24px;
+  padding: 7px 16px;
+  border-radius: 999px;
+  background: #252422;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #e6e6e4;
+}
+
+/* =========================================================
+   Movimiento (arranca cuando el contenido aparece)
+   ========================================================= */
+@media (prefers-reduced-motion: no-preference) {
+  .smLine > span { transform: translateY(110%); }
+  .smFade, .smScanner, .smCard, .smStatus { opacity: 0; }
+  .smRow { opacity: 0; transform: translateY(6px); }
+
+  /* 1) Texto: el título sube línea por línea y después el resto, en orden */
+  .in .smLine > span { animation: smUp 1.2s var(--out) both; animation-delay: calc(var(--i) * 120ms); }
+  @keyframes smUp { from { transform: translateY(110%); } to { transform: none; } }
+  .in .smFade { animation: smFade 1.1s var(--out) both; animation-delay: var(--d); }
+  @keyframes smFade { from { opacity: 0; transform: translateY(24px); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
+
+  /* 2) El escáner sube y aparece, y la línea empieza a escanear */
+  .in .smScanner { animation: smPop 1.3s var(--out) .3s both; }
+  @keyframes smPop { from { opacity: 0; transform: translateY(32px) scale(.96); } to { opacity: 1; transform: none; } }
+  /* baja suave hasta abajo, se apaga despacio, y vuelve a empezar desde arriba */
+  .in .smBeam { animation: smScan 4.6s cubic-bezier(.37, 0, .63, 1) 1s infinite; will-change: top, opacity; }
+  @keyframes smScan {
+    0% { top: 8%; opacity: 0; }
+    20% { opacity: 1; }
+    75% { opacity: 1; }
+    100% { top: 90%; opacity: 0; }
+  }
+
+  /* 3) La ficha y sus datos aparecen después del primer escaneo */
+  .in .smCard { animation: smFade 1s var(--out) 1.3s both; }
+  .in .smRow { animation: smRow .7s var(--out) both; animation-delay: calc(1.6s + var(--r) * 160ms); }
+  @keyframes smRow { to { opacity: 1; transform: none; } }
+
+  /* 4) Por último, el cartelito "Face ID activado" */
+  .in .smStatus { animation: smFade 1s var(--out) 2.2s both; }
+}
+
+/* =========================================================
+   Tablet y celular
+   ========================================================= */
+@media (max-width: 900px) {
+  .smGrid { grid-template-columns: 1fr; }
+  .smCard { right: 0; }
+}
+@media (max-width: 640px) {
+  .smScanner { width: 260px; }
+  .smCard { width: 210px; bottom: 56px; }
+}

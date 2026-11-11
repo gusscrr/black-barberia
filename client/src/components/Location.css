@@ -1,0 +1,160 @@
+/* =========================================================
+   Sección "Dónde estamos" (Location.jsx)
+   Usa los colores definidos en styles.css (:root)
+   ========================================================= */
+
+.locSection { --out: cubic-bezier(.16, 1, .3, 1); }
+/* Va pegada a "Cómo reservar": esa sección ya deja el espacio de arriba,
+   así que acá casi no hace falta (si no, quedaba un hueco enorme). */
+.section.locSection {
+  padding-top: 0;
+  margin-top: calc(clamp(24px, 3.5vw, 56px) * -1);
+}
+
+/* ---------- Encabezado ---------- */
+.locHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px 48px;
+  flex-wrap: wrap;
+  margin-bottom: clamp(32px, 4vw, 52px);
+}
+.locHead .sideText { margin-top: 14px; }
+
+.locTabs { display: inline-flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--g50); }
+.locTab {
+  height: 40px;
+  padding: 0 20px;
+  border-radius: 999px;
+  font-size: 14px;
+  color: var(--g500);
+  transition: background-color .2s, color .2s, box-shadow .2s;
+}
+.locTab:hover { color: var(--black); }
+.locTab.on { background: var(--white); color: var(--black); box-shadow: 0 1px 3px rgba(13, 13, 13, .08), 0 0 0 1px var(--g100); }
+
+/* ---------- Tarjeta: mapa + datos ---------- */
+.locCard {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(320px, 1fr);
+  min-height: 480px;
+  overflow: hidden;
+  border-radius: 28px;
+  background: var(--g50);
+  box-shadow: 0 0 0 1px var(--g100);
+}
+
+/* Mapa */
+.locMap { position: relative; overflow: hidden; background: var(--g100); }
+.locMapSkel {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(13, 13, 13, .04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(13, 13, 13, .04) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+.locFrame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  opacity: 0;
+  transition: opacity .8s ease;   /* el mapa aparece suave y queda siempre a color */
+}
+.locFrame.ready { opacity: 1; }
+
+/* Datos */
+.locInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(32px, 4vw, 52px);
+  background: var(--white);
+  box-shadow: -1px 0 0 var(--g100);
+}
+
+/* Estado: rojo cerrado, verde abierto */
+.locStatus {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  gap: 8px;
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: rgba(229, 72, 77, .08);
+  box-shadow: inset 0 0 0 1px rgba(229, 72, 77, .22);
+  font-size: 13px;
+  font-weight: 500;
+  color: #d93036;
+}
+.locDot { position: relative; width: 6px; height: 6px; border-radius: 50%; background: #e5484d; }
+.locStatus.open { color: #1f7a46; background: rgba(34, 179, 94, .08); box-shadow: inset 0 0 0 1px rgba(34, 179, 94, .22); }
+.locStatus.open .locDot { background: var(--green); }
+.locStatus.open .locDot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--green);
+  animation: pulse 2s ease-out infinite;
+}
+
+.locName { margin-top: 20px; font-size: clamp(26px, 2.4vw, 32px); font-weight: 600; line-height: 1.1; letter-spacing: -.03em; }
+
+/* Datos: un renglón cada uno, ícono finito y texto gris */
+.locRows { display: grid; gap: 14px; margin-top: 24px; }
+.locRows li { display: flex; align-items: center; gap: 12px; font-size: 15px; line-height: 1.4; color: #4a4a4a; }
+.locIcon { flex: none; width: 18px; height: 18px; fill: none; stroke: #8a8a88; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Botones: mismo estilo y efecto que los demás de la web
+   ("Cómo llegar" es un link, así que fijamos el blanco también al pasar el mouse) */
+.locActions { display: flex; gap: 10px; margin-top: 32px; }
+.locActions .btn { flex: 1; height: 50px; padding: 0 18px; }
+.btn.locGo, .btn.locGo:hover { color: var(--white); }
+.locArrow { width: 16px; height: 16px; margin-right: -4px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.locCopy.done { background: var(--g50); }
+.locCopyIn { display: inline-block; }
+@media (prefers-reduced-motion: no-preference) {
+  .locCopy.done .locCopyIn { animation: copyIn .35s var(--out) both; }
+  @keyframes copyIn { from { opacity: 0; transform: translateY(6px); } }
+}
+
+/* Textito para reservar */
+.locBook { align-self: flex-start; margin-top: 20px; font-size: 14px; color: var(--g500); transition: color .2s; }
+.locBook strong { font-weight: 500; color: var(--black); transition: color .2s; }
+.locBook:hover strong { color: var(--g500); }
+
+/* ---------- Entrada al aparecer ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  .locHead, .locCard { opacity: 0; }
+  .in .locHead { animation: locUp 1s var(--out) both; }
+  .in .locCard { animation: locUp 1.2s var(--out) .12s both; }
+  .in .locInfo > * { animation: locUp .9s var(--out) both; }
+  .in .locInfo > *:nth-child(1) { animation-delay: .35s; }
+  .in .locInfo > *:nth-child(2) { animation-delay: .42s; }
+  .in .locInfo > *:nth-child(3) { animation-delay: .49s; }
+  .in .locInfo > *:nth-child(4) { animation-delay: .56s; }
+  .in .locInfo > *:nth-child(5) { animation-delay: .63s; }
+  @keyframes locUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+}
+
+/* ---------- Tablet y celular ---------- */
+@media (max-width: 960px) {
+  .locCard { grid-template-columns: 1fr; min-height: 0; }
+  .locMap { height: 300px; }
+  .locInfo { box-shadow: 0 -1px 0 var(--g100); }
+}
+@media (max-width: 640px) {
+  .locCard { border-radius: 22px; }
+  .locMap { height: 260px; }
+  .locInfo { padding: 26px 22px 28px; }
+  .locActions { flex-direction: column; }
+  .locActions .btn { flex: none; width: 100%; }   /* en columna, cada botón con su alto normal */
+  .locBook { align-self: center; }
+  .locTabs { width: 100%; }
+  .locTab { flex: 1; padding: 0 10px; }
+}

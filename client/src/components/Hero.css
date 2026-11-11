@@ -1,0 +1,198 @@
+/* =========================================================
+   Portada (Hero.jsx) — video de fondo con tapa oscura
+   --p = scroll (0 a 1)
+   ========================================================= */
+
+.hero {
+  --p: 0;
+  --out: cubic-bezier(.16, 1, .3, 1);
+  position: relative;
+  min-height: 100svh;
+  overflow: clip;
+  background: #141414;   /* color mientras carga el video */
+  color: #fff;
+}
+/* Video de fondo: un poco menos de color para que combine con los grises,
+   entra con un zoom suave y se mueve apenas con el scroll */
+.heroVideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(.7) contrast(1.02);
+  transform: scale(1.03) translate3d(0, calc(var(--p) * 60px), 0);
+  pointer-events: none;
+}
+/* Tapa oscura sobre el video: más fuerte a la izquierda, donde va el texto */
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(12, 12, 12, .93) 0%, rgba(12, 12, 12, .85) 38%, rgba(12, 12, 12, .7) 70%, rgba(12, 12, 12, .62) 100%),
+    linear-gradient(transparent 70%, rgba(12, 12, 12, .6) 100%);
+  pointer-events: none;
+}
+
+/* ---------- Texto ---------- */
+.hero .heroInner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100svh;
+  padding-top: calc(var(--nav) + clamp(56px, 15vh, 160px));
+  padding-bottom: calc(40px + clamp(28px, 5vh, 48px));   /* deja lugar para la cinta */
+}
+.heroText {
+  max-width: 760px;
+  transform: translate3d(0, calc(var(--p) * -90px), 0);
+  opacity: calc(1 - var(--p) * 1.4);
+}
+.heroTitle {
+  white-space: nowrap;
+  font-size: clamp(52px, 6vw, 96px);
+  font-weight: 500;
+  line-height: .98;
+  letter-spacing: -.045em;
+}
+.tLine { display: block; overflow: clip; padding-bottom: .08em; margin-bottom: -.08em; }
+.tLine > span { display: block; }
+.heroLead {
+  max-width: 40ch;
+  margin-top: 24px;
+  font-size: 17px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, .72);
+}
+.heroActions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 32px; }
+/* Botones sobre fondo oscuro: el principal pasa a blanco */
+.hero .heroActions .btnBlack { background: var(--white); color: var(--black); }
+.hero .heroActions .btnBlack:hover { background: #e6e6e4; }
+.hero .heroActions .btnLine {
+  border-color: rgba(255, 255, 255, .28);
+  background: rgba(255, 255, 255, .06);
+  color: var(--white);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.hero .heroActions .btnLine:hover { background: rgba(255, 255, 255, .14); }
+
+/* ---------- Indicador "Deslizar" (abajo, al medio) ---------- */
+.heroScroll {
+  position: absolute;
+  right: 0;
+  left: 0;
+  bottom: calc(40px + clamp(22px, 4vh, 40px));   /* arriba de la cinta */
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: max-content;
+  margin: 0 auto;
+  padding-left: .3em;            /* compensa el espaciado de letras para que quede centrado */
+  font-size: 8.5px;
+  font-weight: 600;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, .34);
+  opacity: calc(1 - var(--p) * 4);  /* se va apenas bajás */
+  transition: color .25s ease;
+}
+.heroScroll:hover { color: rgba(255, 255, 255, .7); }
+/* Línea finita */
+.heroScroll i {
+  position: relative;
+  width: 1px;
+  height: 36px;
+  margin-left: -.3em;
+  overflow: hidden;
+  background: linear-gradient(rgba(255, 255, 255, .04), rgba(255, 255, 255, .3));
+}
+/* Luz que baja por la línea */
+.heroScroll i::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: -40%;
+  width: 1px;
+  height: 40%;
+  background: linear-gradient(rgba(255, 255, 255, 0), #fff);
+  box-shadow: 0 0 6px rgba(255, 255, 255, .6);
+}
+
+/* ---------- Cinta de servicios (abajo de todo) ---------- */
+.heroTicker {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 3;
+  height: 40px;
+  overflow: hidden;
+  border-top: 1px solid rgba(255, 255, 255, .08);
+  background: rgba(12, 12, 12, .35);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  /* los bordes se desvanecen */
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+.tkTrack { display: flex; width: max-content; height: 100%; }
+.tkList { display: flex; align-items: center; flex: none; }
+.tkList li { display: flex; align-items: center; }
+/* puntito entre servicio y servicio */
+.tkList li::after {
+  content: '';
+  width: 3px;
+  height: 3px;
+  margin: 0 22px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .3);
+}
+.tkList button {
+  font-size: 13px;
+  letter-spacing: .005em;
+  color: rgba(255, 255, 255, .68);
+  white-space: nowrap;
+  transition: color .2s ease;
+}
+.tkList button:hover { color: var(--white); }
+
+/* =========================================================
+   Movimiento de entrada
+   ========================================================= */
+@media (prefers-reduced-motion: no-preference) {
+  .tLine > span { animation: tUp 1.3s var(--out) both; animation-delay: calc(var(--i) * 120ms + 200ms); }
+  @keyframes tUp { from { transform: translateY(110%) rotate(2deg); } }
+  .hIn { animation: hIn 1.2s var(--out) both; animation-delay: var(--d); }
+  @keyframes hIn { from { opacity: 0; transform: translateY(16px); filter: blur(6px); } }
+  .heroVideo { animation: bgIn 2.4s var(--out) both; }
+  @keyframes bgIn { from { opacity: 0; transform: scale(1.1); } }
+  /* la cinta corre sola, despacio, y frena al pasar el mouse */
+  .tkTrack { animation: tkRun 48s linear infinite; }
+  .heroTicker:hover .tkTrack { animation-play-state: paused; }
+  @keyframes tkRun { to { transform: translateX(-50%); } }
+  /* la luz baja, se apaga y vuelve a empezar */
+  .heroScroll i::after { animation: scrollDrop 2.4s cubic-bezier(.6, 0, .3, 1) infinite; }
+  @keyframes scrollDrop { 0% { top: -40%; opacity: 0; } 15% { opacity: 1; } 80% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
+}
+
+/* =========================================================
+   Tablet y celular
+   ========================================================= */
+@media (max-width: 900px) {
+  .hero { display: flex; flex-direction: column-reverse; min-height: 100svh; }   /* toda la pantalla: la cinta queda abajo de todo */
+  .hero::after { background: linear-gradient(rgba(12, 12, 12, .93) 0%, rgba(12, 12, 12, .85) 45%, rgba(12, 12, 12, .66) 100%); }
+  .hero .heroInner { flex: 1; justify-content: center; min-height: 0; padding-top: calc(var(--nav) + 40px); padding-bottom: 40px; }
+  .heroTicker { position: relative; order: -1; height: 36px; }   /* queda abajo de todo */
+  .tkList li::after { margin: 0 16px; }
+  .heroTitle { white-space: normal; }
+  .heroScroll { display: none; }   /* en celular la portada es más corta */
+}
+@media (max-width: 640px) {
+  .heroTitle { font-size: clamp(36px, 11.2vw, 52px); }   /* "Cortes precisos" entra en una línea */
+}

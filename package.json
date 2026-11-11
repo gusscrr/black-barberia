@@ -1,0 +1,26 @@
+{
+  "name": "black-barberia-turnos",
+  "version": "2.0.0",
+  "private": true,
+  "engines": {
+    "node": ">=22.13"
+  },
+  "type": "module",
+  "scripts": {
+    "postinstall": "npm install --prefix client",
+    "dev": "concurrently -n server,client -c blue,green \"npm:dev:server\" \"npm:dev:client\"",
+    "dev:server": "node --watch src/server.js",
+    "dev:client": "npm run dev --prefix client",
+    "build": "npm run build --prefix client",
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "react-icons": "^5.7.0",
+    "three": "^0.169.0"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

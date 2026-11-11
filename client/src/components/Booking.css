@@ -1,0 +1,378 @@
+/* =========================================================
+   Panel de reserva (Booking.jsx)
+   Usa los colores definidos en styles.css (:root)
+   ========================================================= */
+
+/* ---------- Fondo y panel ---------- */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  justify-content: flex-end;
+  background: rgba(13, 13, 13, .45);
+  backdrop-filter: blur(2px);
+  animation: fadeIn .25s ease both;
+}
+.overlay.out { animation: fadeOut .22s ease both; }
+.drawer {
+  display: flex;
+  flex-direction: column;
+  width: min(500px, 100%);
+  height: 100%;
+  background: var(--white);
+  box-shadow: -24px 0 60px rgba(13, 13, 13, .12);
+  animation: slideIn .4s var(--ease) both;
+}
+.overlay.out .drawer { animation: slideOut .22s ease both; }
+@keyframes fadeIn { from { opacity: 0; } }
+@keyframes fadeOut { to { opacity: 0; } }
+@keyframes slideIn { from { transform: translateX(100%); } }
+@keyframes slideOut { to { transform: translateX(100%); } }
+
+/* ---------- Encabezado ---------- */
+.drawerHead {
+  display: grid;
+  grid-template-columns: 40px 1fr 40px;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+}
+.drawerTitle { text-align: center; line-height: 1.3; }
+.drawerTitle p { font-size: 15px; font-weight: 600; letter-spacing: -.01em; }
+.drawerTitle span { font-size: 12.5px; color: var(--g500); }
+.iconBtn {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  transition: background-color .2s;
+}
+.iconBtn:hover:not(:disabled) { background: var(--g50); }
+.iconBtn:disabled { opacity: .25; cursor: default; }
+.icon { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Barra de progreso */
+.bar { height: 2px; background: var(--g100); }
+.bar span { display: block; height: 100%; background: var(--black); transition: width .45s var(--ease); }
+
+/* ---------- Cuerpo ---------- */
+.drawerBody { flex: 1; overflow-y: auto; padding: 28px 28px 36px; overscroll-behavior: contain; }
+.stepHead { margin-bottom: 24px; }
+.stepHead h2 {
+  margin-bottom: 6px;
+  font-size: 28px;
+  font-weight: 650;
+  line-height: 1.1;
+  letter-spacing: -.03em;
+}
+.stepHead h2:focus { outline: none; }
+.stepHead p { font-size: 15px; line-height: 1.5; color: var(--g500); }
+
+/* ---------- Opciones (peluquero / servicio) ---------- */
+.choices { display: grid; gap: 8px; }
+.choice {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: var(--g50);
+  text-align: left;
+  transition: opacity .3s ease, background-color .2s, box-shadow .2s;
+}
+.choice:hover { background: var(--g100); }
+.choice.on { background: var(--white); box-shadow: 0 0 0 1px var(--g200), 0 4px 14px rgba(13, 13, 13, .06); }
+.mono {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--white);
+  color: var(--black);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -.01em;
+}
+.choice.on .mono { background: var(--g100); }
+.choiceText { flex: 1; min-width: 0; }
+.choiceText strong { display: block; font-size: 15px; font-weight: 400; line-height: 1.35; letter-spacing: 0; }
+.choiceText span { display: block; margin-top: 2px; font-size: 13.5px; line-height: 1.4; color: var(--g500); }
+.choicePrice { font-size: 15px; font-weight: 400; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.choiceEnd {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  color: #a3a3a3;
+  transition: background-color .2s, color .2s;
+}
+.choiceEnd svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.choice:hover .choiceEnd { color: var(--black); }
+.choiceEnd.on, .choice:hover .choiceEnd.on { background: var(--black); color: var(--white); }
+.choiceEnd.on svg { width: 14px; height: 14px; stroke-width: 2.6; }
+
+/* ---------- Servicio elegido desde la cinta ---------- */
+.wantedTag {
+  display: inline-flex;
+  align-items: center;
+  height: 26px;
+  margin-bottom: 14px;
+  padding: 0 11px;
+  border-radius: 999px;
+  background: var(--g50);
+  box-shadow: inset 0 0 0 1px var(--g100);
+  font-size: 12.5px;
+  color: var(--black);
+}
+
+/* Peluquero que no hace el servicio elegido: bloqueado */
+.choice.blocked { cursor: not-allowed; opacity: .5; }
+.choice.blocked:hover { background: var(--g50); }
+.choice.blocked .mono { color: var(--g500); }
+.choiceLock {
+  flex: none;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--white);
+  font-size: 12px;
+  color: var(--g500);
+  white-space: nowrap;
+}
+
+/* ---------- Día ---------- */
+.quick { display: flex; gap: 8px; margin-bottom: 16px; }
+.quickBtn {
+  padding: 8px 18px;
+  border-radius: 999px;
+  background: var(--g50);
+  font-size: 14px;
+  font-weight: 400;
+  transition: background-color .2s, color .2s;
+}
+.quickBtn:hover { background: var(--g100); }
+.quickBtn.on { background: var(--black); color: var(--white); }
+.cal { padding: 16px 14px 12px; border-radius: 16px; background: var(--g50); }
+.calHead { display: flex; justify-content: space-between; align-items: center; margin: 0 2px 8px 6px; }
+.calMonth { font-size: 16px; font-weight: 600; letter-spacing: -.01em; }
+.calNav { display: flex; gap: 2px; }
+.calGrid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.calWd { padding: 6px 0 8px; text-align: center; font-size: 12px; font-weight: 500; color: var(--g500); }
+.calDay {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  max-width: 48px;
+  aspect-ratio: 1;
+  margin: 0 auto;
+  border-radius: 50%;
+  font-size: 15px;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  transition: background-color .2s, color .2s;
+}
+.calDay:hover:not(:disabled):not(.on) { background: var(--white); }
+.calDay:disabled { color: #c4c4c2; cursor: default; }
+.calDay.today::after {
+  content: '';
+  position: absolute;
+  bottom: 6px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.calDay.on { background: var(--black); color: var(--white); }
+
+/* ---------- Horario ---------- */
+.slotGroup + .slotGroup { margin-top: 24px; }
+.slotGroup h3 { margin-bottom: 10px; font-size: 13px; font-weight: 500; color: var(--g500); }
+.slots { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.slot {
+  height: 46px;
+  border-radius: 12px;
+  background: var(--g50);
+  font-size: 15px;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  transition: background-color .2s, color .2s;
+}
+.slot:hover { background: var(--g100); }
+.slot.on { background: var(--black); color: var(--white); }
+.empty { display: grid; gap: 18px; justify-items: start; padding: 24px; border-radius: 16px; background: var(--g50); }
+
+/* ---------- Tus datos ---------- */
+.form .btnFull { margin-top: 8px; }
+.field { display: block; margin-bottom: 18px; }
+.fieldLabel { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; font-weight: 500; }
+.fieldLabel em { font-style: normal; font-weight: 400; color: var(--g500); }
+.field input, .field textarea {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: var(--g50);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 400;
+  transition: border-color .2s, background-color .2s, box-shadow .2s;
+}
+.field textarea { min-height: 96px; resize: vertical; }
+.field input::placeholder, .field textarea::placeholder { color: #a3a3a3; }
+.field input:hover, .field textarea:hover { background: var(--g100); }
+.field input:focus, .field textarea:focus {
+  outline: none;
+  border-color: var(--g200);
+  background: var(--white);
+  box-shadow: 0 0 0 4px rgba(13, 13, 13, .05);
+}
+/* Error: solo un borde rojo suave y el texto abajo, sin pintar todo de rojo */
+.hasError input, .hasError textarea,
+.hasError input:hover, .hasError textarea:hover { border-color: rgba(176, 0, 32, .4); background: var(--white); }
+.hasError input:focus, .hasError textarea:focus { border-color: rgba(176, 0, 32, .55); box-shadow: 0 0 0 4px rgba(176, 0, 32, .06); }
+.fieldError {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 7px;
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--red);
+  animation: errIn .25s ease both;
+}
+.fieldError::before {
+  content: '!';
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--red);
+  color: var(--white);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+}
+@keyframes errIn { from { opacity: 0; transform: translateY(-2px); } }
+
+/* Aviso de cuenta en "Tus datos" */
+.whoBar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: -6px 0 24px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--g50);
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--g500);
+}
+.whoBar p { flex: 1; min-width: 0; }
+.whoBar strong { font-weight: 500; color: var(--black); overflow-wrap: anywhere; }
+.whoBar .textLink { flex: none; font-size: 14px; color: var(--black); }
+.whoAvatar {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--white);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--black);
+}
+
+/* ---------- Resumen fijo abajo ---------- */
+.drawerFoot {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 28px 18px;
+  border-top: 1px solid var(--g100);
+  background: var(--white);
+}
+.sumAvatar {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--g50);
+  font-size: 13px;
+  font-weight: 600;
+}
+.sumText { flex: 1; min-width: 0; }
+.sumMain {
+  overflow: hidden;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -.01em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sumSub {
+  margin-top: 2px;
+  overflow: hidden;
+  font-size: 13px;
+  line-height: 1.35;
+  color: var(--g500);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sumPrice { flex: none; font-size: 18px; font-weight: 650; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+
+/* ---------- Confirmación ---------- */
+.success { padding-top: 8px; }
+.okMark {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  margin-bottom: 24px;
+  border-radius: 50%;
+  background: var(--black);
+  color: var(--white);
+  animation: pop .5s var(--ease) both;
+}
+.okMark .icon { width: 26px; height: 26px; stroke-width: 2.2; }
+@keyframes pop { from { transform: scale(.6); opacity: 0; } }
+.receipt { margin-bottom: 24px; padding: 6px 18px; border-radius: 16px; background: var(--g50); }
+.receipt div { display: flex; justify-content: space-between; gap: 16px; padding: 12px 0; font-size: 15px; }
+.receipt div + div { border-top: 1px solid var(--g100); }
+.receipt dt { color: var(--g500); }
+.receipt dd { font-weight: 500; text-align: right; }
+.successActions { display: grid; gap: 10px; }
+
+/* Botones anchos de los paneles: misma altura que los del formulario */
+.drawer .btnFull { height: 48px; }
+
+/* ---------- Celular ---------- */
+@media (max-width: 640px) {
+  .overlay { align-items: flex-end; }
+  .drawer { height: 94svh; border-radius: 20px 20px 0 0; animation-name: sheetIn; }
+  .overlay.out .drawer { animation-name: sheetOut; }
+  .drawerHead { padding: 10px 10px; }
+  .drawerBody { padding: 22px 20px 28px; }
+  .drawerFoot { padding: 12px 20px calc(14px + env(safe-area-inset-bottom)); }
+  .stepHead h2 { font-size: 25px; }
+  .cal { padding: 12px 8px 8px; }
+  .calGrid { gap: 2px; }
+  .calDay { font-size: 14px; }
+  .calDay.today::after { bottom: 5px; }
+  .slots { grid-template-columns: repeat(3, 1fr); }
+  .field input, .field textarea { font-size: 16px; } /* evita el zoom automático en iPhone */
+  @keyframes sheetIn { from { transform: translateY(100%); } }
+  @keyframes sheetOut { to { transform: translateY(100%); } }
+}

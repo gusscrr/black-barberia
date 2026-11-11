@@ -1,0 +1,206 @@
+/* =========================================================
+   Ventana de inicio de sesión / registro (Auth.jsx)
+   Los campos (.field) usan los estilos de Booking.css
+   ========================================================= */
+
+.authOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(13, 13, 13, .38);
+  backdrop-filter: blur(6px) saturate(1.1);
+  -webkit-backdrop-filter: blur(6px) saturate(1.1);
+  animation: fadeIn .25s ease both;
+}
+.authOverlay.out { animation: fadeOut .2s ease both; }
+
+.authBox {
+  position: relative;
+  width: min(420px, 100%);
+  max-height: calc(100svh - 48px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  padding: 40px 36px 30px;
+  border-radius: 28px;
+  background: var(--white);
+  box-shadow:
+    0 0 0 1px rgba(13, 13, 13, .04),
+    0 2px 6px rgba(13, 13, 13, .04),
+    0 32px 80px -12px rgba(13, 13, 13, .22);
+  animation: authIn .45s var(--ease) both;
+}
+.authBox::-webkit-scrollbar { display: none; }
+.authBox:focus { outline: none; } /* sin borde al abrir */
+.authOverlay.out .authBox { animation: authOut .2s ease both; }
+@keyframes authIn { from { opacity: 0; transform: translateY(16px) scale(.97); } }
+@keyframes authOut { to { opacity: 0; transform: translateY(8px) scale(.98); } }
+
+.authClose {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: var(--g500);
+  transition: background-color .2s ease, color .2s ease;
+}
+.authClose:hover { background: var(--g50); color: var(--black); }
+.authClose svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
+
+/* ---------- Encabezado ---------- */
+.authHead { margin-bottom: 26px; text-align: center; }
+.authLogo {
+  display: inline-block;
+  margin-bottom: 20px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -.03em;
+}
+.authHead h2 {
+  font-size: 26px;
+  font-weight: 650;
+  line-height: 1.15;
+  letter-spacing: -.035em;
+  text-wrap: balance;
+}
+.authHead p {
+  max-width: 30ch;
+  margin: 8px auto 0;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--g500);
+  text-wrap: balance;
+}
+
+/* ---------- Pestañas ---------- */
+.authTabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  padding: 3px;
+  margin-bottom: 26px;
+  border-radius: 999px;
+  background: var(--g50);
+}
+.authTab {
+  height: 36px;
+  border-radius: 999px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--g500);
+  transition: background-color .25s ease, color .25s ease, box-shadow .25s ease;
+}
+.authTab:hover:not(.on) { color: var(--black); }
+.authTab.on {
+  background: var(--white);
+  color: var(--black);
+  box-shadow: 0 1px 2px rgba(13, 13, 13, .06), 0 0 0 1px rgba(13, 13, 13, .04);
+}
+
+/* ---------- Formulario ---------- */
+.authBox form { animation: authForm .35s var(--ease) both; }
+@keyframes authForm { from { opacity: 0; transform: translateY(4px); } }
+.authBox .field { margin-bottom: 16px; }
+.authBox .fieldLabel { margin-bottom: 7px; font-size: 13.5px; }
+.authBox .field input { padding: 13px 16px; font-size: 15px; }
+.fieldHint { display: block; margin-top: 7px; font-size: 13px; color: var(--g500); }
+
+.passWrap { position: relative; }
+.passWrap input { padding-right: 52px !important; }
+.passToggle {
+  position: absolute;
+  top: 50%;
+  right: 7px;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: #a3a3a3;
+  transform: translateY(-50%);
+  transition: background-color .2s ease, color .2s ease;
+}
+.passToggle:hover { background: var(--g100); color: var(--black); }
+.passToggle svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+.authBox .notice.bad { margin: 4px 0 16px; padding: 12px 14px; border-radius: 12px; font-size: 14px; line-height: 1.45; }
+
+/* Botón principal: rectángulo redondeado con ícono */
+.authBox .authSubmit {
+  gap: 10px;
+  height: 48px;
+  margin-top: 10px;
+  border-radius: 12px;
+  font-size: 15px;
+}
+.authBox .authSubmit svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+/* Ruedita mientras carga */
+.authSpin {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, .3);
+  border-top-color: var(--white);
+  border-radius: 50%;
+  animation: authSpin .7s linear infinite;
+}
+@keyframes authSpin { to { transform: rotate(360deg); } }
+
+.authSwitch {
+  margin-top: 22px;
+  padding-top: 20px;
+  border-top: 1px solid var(--g100);
+  font-size: 14px;
+  color: var(--g500);
+  text-align: center;
+}
+.authSwitch .textLink { color: var(--black); font-weight: 600; }
+.authSwitch .textLink:hover { color: var(--g500); }
+
+/* ---------- Celular: sube desde abajo ---------- */
+@media (max-width: 640px) {
+  .authOverlay { place-items: end center; padding: 0; }
+  .authBox {
+    width: 100%;
+    max-height: 94svh;
+    padding: 34px 22px calc(22px + env(safe-area-inset-bottom));
+    border-radius: 24px 24px 0 0;
+    animation-name: authSheetIn;
+    animation-duration: .45s;
+  }
+  /* Manija para indicar que es una hoja */
+  .authBox::before {
+    content: '';
+    position: absolute;
+    top: 9px;
+    left: 50%;
+    width: 36px;
+    height: 4px;
+    border-radius: 999px;
+    background: var(--g200);
+    transform: translateX(-50%);
+  }
+  .authClose { top: 12px; right: 12px; }
+  .authHead { margin-bottom: 22px; }
+  .authLogo { margin-bottom: 14px; }
+  .authHead h2 { font-size: 24px; }
+  .authTabs { margin-bottom: 22px; }
+  .authBox .field input { font-size: 16px; } /* evita el zoom automático en iPhone */
+  .authOverlay.out .authBox { animation-name: authSheetOut; }
+  @keyframes authSheetIn { from { transform: translateY(100%); } }
+  @keyframes authSheetOut { to { transform: translateY(100%); } }
+}

@@ -1,0 +1,197 @@
+/* =========================================================
+   Barra superior: botón de cuenta y menú (Header.jsx)
+   El resto de la barra está en styles.css
+   ========================================================= */
+
+.navActions { display: flex; align-items: center; gap: 8px; }
+
+/* ---------- Botón "Iniciar sesión" ---------- */
+.loginBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 26px;
+  padding: 0 11px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  color: inherit;
+  transition: background-color .25s ease;
+}
+.loginBtn:hover { background: var(--g50); }
+.loginBtn svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ---------- Botón de cuenta (logueado) ---------- */
+.account { position: relative; }
+.accountBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 26px;
+  padding: 0 8px 0 2px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background-color .25s ease;
+}
+.accountBtn:hover { background: var(--g50); }
+.accountBtn.on { background: var(--g50); box-shadow: inset 0 0 0 1px var(--g100); }
+
+/* Círculo con las iniciales */
+.accountAvatar {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--g100);
+  color: var(--black);
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -.01em;
+}
+.accountAvatar.big { width: 40px; height: 40px; font-size: 14px; }
+.accountChevron { width: 15px; height: 15px; fill: none; stroke: var(--g500); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: transform .25s var(--ease); }
+.accountBtn.on .accountChevron { transform: rotate(180deg); }
+
+/* ---------- Menú desplegable ---------- */
+.accountMenu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 20;
+  width: 260px;
+  padding: 8px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, .98);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow:
+    0 0 0 1px rgba(13, 13, 13, .05),
+    0 2px 6px rgba(13, 13, 13, .04),
+    0 20px 48px -8px rgba(13, 13, 13, .16);
+  color: var(--black);   /* siempre letras negras, aunque la barra esté en negro */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-4px) scale(.98);
+  transform-origin: 100% 0;
+  transition: opacity .18s ease, transform .18s ease, visibility 0s linear .18s;
+}
+.accountMenu.open {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity .25s ease, transform .35s var(--ease), visibility 0s;
+}
+.accountHead {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 10px 16px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid var(--g100);
+}
+/* Nombre y email (solo el texto, no el círculo) */
+.accountHead > div { min-width: 0; line-height: 1.35; }
+.accountHead > div strong { display: block; overflow: hidden; font-size: 14.5px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.accountHead > div span { display: block; overflow: hidden; font-size: 13px; color: var(--g500); text-overflow: ellipsis; white-space: nowrap; }
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  height: 42px;
+  padding: 0 12px;
+  border-radius: 11px;
+  font-size: 14.5px;
+  font-weight: 500;
+  text-align: left;
+  transition: background-color .2s ease;
+}
+.menuItem:hover, .menuItem:focus-visible { background: var(--g50); outline: none; }
+.menuItem svg { width: 18px; height: 18px; fill: none; stroke: var(--g500); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: stroke .2s ease; }
+.menuItem:hover svg { stroke: var(--black); }
+.menuSep + .menuItem:hover { color: var(--red); }
+.menuSep + .menuItem:hover svg { stroke: var(--red); }
+.menuSep { height: 1px; margin: 6px 4px; background: var(--g100); }
+
+/* ---------- Menú de secciones (celular y tablet) ---------- */
+.burger {
+  display: none;
+  position: relative;
+  width: 28px;
+  height: 28px;
+  margin-right: -4px;
+  border-radius: 9px;
+  transition: background-color .2s ease;
+}
+.burger:hover { background: var(--g50); }
+/* Dos rayitas que se convierten en una cruz */
+.burger span {
+  position: absolute;
+  left: 7px;
+  width: 14px;
+  height: 1.6px;
+  border-radius: 2px;
+  background: var(--black);
+  transition: transform .3s var(--ease), top .3s var(--ease), background-color .35s ease;
+}
+.burger span:first-child { top: 10.5px; }
+.burger span:last-child { top: 16.5px; }
+.burger.on span:first-child { top: 13.5px; transform: rotate(45deg); }
+.burger.on span:last-child { top: 13.5px; transform: rotate(-45deg); }
+
+.mobileNav {
+  display: none;
+  overflow: hidden;
+  max-height: 0;
+  background: var(--white);
+  transition: max-height .35s var(--ease), box-shadow .3s ease;
+}
+.mobileNav.open { max-height: 260px; box-shadow: 0 16px 30px -18px rgba(13, 13, 13, .18); }
+.mobileNav .wrap { display: grid; padding-top: 6px; padding-bottom: 14px; }
+.mobileNav a {
+  display: flex;
+  align-items: center;
+  height: 50px;
+  border-bottom: 1px solid var(--g100);
+  font-size: 16px;
+  color: var(--black);
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity .25s ease, transform .3s var(--ease), color .2s ease;
+}
+.mobileNav a:last-child { border-bottom: 0; }
+.mobileNav a:hover { color: var(--g500); }
+.mobileNav.open a { opacity: 1; transform: none; }
+.mobileNav.open a:nth-child(2) { transition-delay: .03s; }
+.mobileNav.open a:nth-child(3) { transition-delay: .06s; }
+
+/* ---------- Barra sobre fondo oscuro (vidrio negro) ---------- */
+.nav.dark .loginBtn:hover,
+.nav.dark .accountBtn:hover,
+.nav.dark .burger:hover { background: rgba(255, 255, 255, .1); }
+.nav.dark .accountBtn.on { background: rgba(255, 255, 255, .12); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .1); }
+.nav.dark .accountBtn .accountAvatar { background: rgba(255, 255, 255, .9); }
+.nav.dark .accountChevron { stroke: rgba(255, 255, 255, .6); }
+.nav.dark .burger span { background: var(--white); }
+.nav.dark .mobileNav { background: transparent; }
+.nav.dark .mobileNav a { border-bottom-color: rgba(255, 255, 255, .08); color: var(--white); }
+.nav.dark .mobileNav a:hover { color: rgba(255, 255, 255, .6); }
+
+@media (max-width: 960px) {
+  .burger { display: block; }
+  .mobileNav { display: block; }
+}
+
+/* ---------- Celular ---------- */
+@media (max-width: 640px) {
+  .loginBtn { width: 28px; padding: 0; justify-content: center; }
+  .loginBtn span { display: none; }
+  .accountName, .accountChevron { display: none; }
+  .accountBtn { padding: 0 2px; }
+  .accountMenu { position: fixed; top: calc(var(--nav) + 6px); right: 12px; left: 12px; width: auto; }
+}

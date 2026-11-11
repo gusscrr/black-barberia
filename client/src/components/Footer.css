@@ -1,0 +1,102 @@
+/* =========================================================
+   Pie de página (Footer.jsx)
+   Usa los colores definidos en styles.css (:root)
+   ========================================================= */
+
+.footer {
+  padding: clamp(56px, 7vw, 96px) 0 28px;
+  background: var(--g50);
+}
+
+/* ---------- Llamado final ---------- */
+.ftCta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 32px 48px;
+  flex-wrap: wrap;
+  padding: clamp(32px, 4.5vw, 56px);
+  border-radius: 28px;
+  background: var(--white);
+  box-shadow: 0 1px 2px rgba(13, 13, 13, .04), 0 0 0 1px rgba(13, 13, 13, .03);
+}
+.ftCtaText h2 {
+  font-size: clamp(30px, 3.8vw, 48px);
+  font-weight: 650;
+  line-height: 1.05;
+  letter-spacing: -.035em;
+}
+.ftNext {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 18px;
+  font-size: 15px;
+  color: var(--g500);
+}
+.ftNext strong { font-weight: 600; color: var(--black); }
+.ftCtaActions { display: flex; gap: 10px; flex-wrap: wrap; }
+.ftCtaActions .btnLine { background: var(--white); }
+
+/* ---------- Columnas ---------- */
+.ftGrid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr 1fr;
+  gap: 32px;
+  padding: clamp(48px, 6vw, 72px) 0 clamp(40px, 5vw, 56px);
+}
+.ftBrand .logo { font-size: 20px; }
+.ftBrand p { max-width: 30ch; margin-top: 12px; font-size: 15px; line-height: 1.55; color: var(--g500); }
+/* Redes sociales: círculos blancos con el mismo efecto que los otros botones */
+.ftSocial { display: flex; gap: 8px; margin-top: 20px; }
+.ftSocial a {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--white);
+  box-shadow: inset 0 0 0 1px var(--g200);
+  color: var(--black);
+  transition: background-color .25s ease, transform .15s ease;
+}
+.ftSocial a:hover { background: var(--g50); color: var(--black); }
+.ftSocial a:active { transform: scale(.98); }
+.ftSocial svg { width: 15px; height: 15px; }
+.ftSocial .ig svg { width: 14px; height: 14px; }   /* el de Instagram, más nítido y del mismo peso que los otros */
+.ftCol h3 { margin-bottom: 14px; font-size: 13px; font-weight: 600; color: var(--black); }
+.ftCol p, .ftCol a, .ftLink {
+  display: block;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--g500);
+  text-align: left;
+  transition: color .2s;
+}
+.ftCol p + p, .ftCol a + a, .ftCol p + .ftLink { margin-top: 8px; }
+.ftCol a:hover, .ftLink:hover { color: var(--black); }
+.ftLink { font-weight: 500; color: var(--black); }
+.ftLink:hover { color: var(--g500); }
+
+/* ---------- Copyright ---------- */
+.ftCopy {
+  padding-top: 24px;
+  border-top: 1px solid var(--g200);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--g500);
+  text-align: center;
+}
+
+/* ---------- Tablet y celular ---------- */
+@media (max-width: 960px) {
+  .ftGrid { grid-template-columns: 1fr 1fr; }
+  .ftBrand { grid-column: 1 / -1; }
+}
+@media (max-width: 640px) {
+  .ftCta { padding: 28px 24px; border-radius: 22px; }
+  .ftCtaActions { width: 100%; }
+  .ftCtaActions .btn { flex: 1 1 100%; }
+  .ftGrid { gap: 28px 20px; }
+  .footer { padding-bottom: 84px; }   /* que el botón de WhatsApp no tape el copyright */
+}
