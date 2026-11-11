@@ -5,3 +5,4 @@ data/*.db-shm
 data/*.db-wal
 client/node_modules/
 client/dist/
+/public/

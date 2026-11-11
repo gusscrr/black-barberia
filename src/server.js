@@ -31,8 +31,8 @@ if (!ADMIN_ON) {
 
 app.use(express.json({ limit: '10kb' }));   // nadie necesita mandar más que esto
 app.set('trust proxy', 'loopback');
-// Frontend React ya compilado (npm run build)
-const CLIENT_DIST = path.join(__dirname, '../client/dist');
+// Frontend React ya compilado (npm run build). En Vercel lo sirve /public directo.
+const CLIENT_DIST = path.join(__dirname, '../public');
 app.use(express.static(CLIENT_DIST));
 
 // Cuentas de usuario (registro, login, mis turnos)
@@ -222,4 +222,9 @@ app.use((err, _req, res, _next) => {
   res.status(500).json({ error: 'Algo salió mal. Probá de nuevo en un momento.' });
 });
 
-app.listen(PORT, () => console.log(`Black Barberia: http://localhost:${PORT} (hora de ${TIMEZONE})`));
+// En tu compu arranca el servidor. En Vercel lo maneja Vercel.
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => console.log(`Black Barberia: http://localhost:${PORT} (hora de ${TIMEZONE})`));
+}
+
+export default app;
