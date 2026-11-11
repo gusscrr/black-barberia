@@ -2,7 +2,10 @@ import { DatabaseSync } from 'node:sqlite';
 import fs from 'node:fs';
 import path from 'node:path';
 
-const dbFile = process.env.DB_FILE || './data/black-barberia.db';
+// En Vercel solo se puede escribir en /tmp; en tu compu usa la carpeta data
+const dbFile = process.env.VERCEL
+  ? '/tmp/black-barberia.db'
+  : (process.env.DB_FILE || './data/black-barberia.db');
 fs.mkdirSync(path.dirname(path.resolve(dbFile)), { recursive: true });
 const db = new DatabaseSync(dbFile);
 db.exec('PRAGMA journal_mode = WAL');
